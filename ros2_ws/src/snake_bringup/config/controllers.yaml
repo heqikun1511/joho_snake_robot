@@ -1,0 +1,31 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50
+
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    snake_joint_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+snake_joint_controller:
+  ros__parameters:
+    joints:
+      - pitch_joint_1
+      - yaw_joint_1
+      - pitch_joint_2
+      - yaw_joint_2
+      - pitch_joint_3
+      - yaw_joint_3
+      - pitch_joint_4
+      - yaw_joint_4
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+
+    allow_partial_joints_goal: false
+    action_monitor_rate: 20.0
