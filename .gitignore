@@ -1,0 +1,40 @@
+# ================= ROS2 workspace =================
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+.colcon/
+
+# Python / ROS2 python packages
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+.coverage
+*.so
+*.pyc
+
+# ================= STM32 firmware build artifacts =================
+firmware/stm32f407_snake/build/
+*.o
+*.d
+*.lst
+*.elf
+*.bin
+*.hex
+*.map
+*.su
+*.dis
+
+# ================= VS Code (keep settings, ignore IntelliSense DB) =================
+.vscode/*.db
+.vscode/*.db-shm
+.vscode/*.db-wal
+
+# ================= IDE / OS =================
+.idea/
+.vscode-ide/
+*.swp
+*~
+.DS_Store
+Thumbs.db
