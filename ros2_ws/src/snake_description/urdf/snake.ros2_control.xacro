@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<!--八个舵机与关节之间的映射-->
+<xacro:macro
+    name="snake_control_joint"
+    params="joint_name servo_id direction offset">
+ <joint name="${joint_name}">
+      <param name="servo_id">${servo_id}</param>
+      <param name="direction">${direction}</param>
+      <param name="offset">${offset}</param>
+      <command_interface name="position">
+
+      <!--限位在-60 到  +60范围-->
+        <param name="min">-1.0471976</param>
+        <param name="max">1.0471976</param>
+      </command_interface>
+      <state_interface name="position"/>
+    </joint>
+
+
+  </xacro:macro>
+<!--ros2 control 部分-->
+
+
+
+
+    <xacro:macro
+    name="snake_ros2_control"
+    params="use_mock_hardware serial_port">
+ <!--sys层-->
+<ros2_control name="SnakeSystem" type="system">
+ <hardware>
+        <!-- 不连接 STM32 时使用模拟硬件 -->
+        <xacro:if value="${use_mock_hardware}">
+          <plugin>mock_components/GenericSystem</plugin>
+          <param name="calculate_dynamics">false</param>
+        </xacro:if>
+
+
+                <!-- 连接真实 STM32 -->
+        <xacro:unless value="${use_mock_hardware}">
+          <plugin>snake_hardware/SnakeSystemHardware</plugin>
+            <!--通过串口实现与单片机的通讯-->
+          <param name="USB0">$</param>
+          <param name="baudrate">115200</param>
+          <param name="command_timeout_ms">300</param>
+          <param name="protocol_version">1</param>
+        </xacro:unless>
+      </hardware>
+
+
+<!--分组映射定义-->
+   <!-- 模块 1：STM32 H=ID2，V=ID1 -->
+      <xacro:snake_control_joint
+        joint_name="pitch_joint_1"
+        servo_id="1"
+        direction="1"
+        offset="0.0"/>
+
+      <xacro:snake_control_joint
+        joint_name="yaw_joint_1"
+        servo_id="2"
+        direction="1"
+        offset="0.0"/>
+
+      <!-- 模块 2：STM32 H=ID4，V=ID3 -->
+      <xacro:snake_control_joint
+        joint_name="pitch_joint_2"
+        servo_id="3"
+        direction="1"
+        offset="0.0"/>
+
+      <xacro:snake_control_joint
+        joint_name="yaw_joint_2"
+        servo_id="4"
+        direction="1"
+        offset="0.0"/>
+
+      <!-- 模块 3：STM32 H=ID6，V=ID5 -->
+      <xacro:snake_control_joint
+        joint_name="pitch_joint_3"
+        servo_id="5"
+        direction="1"
+        offset="0.0"/>
+
+      <xacro:snake_control_joint
+        joint_name="yaw_joint_3"
+        servo_id="6"
+        direction="1"
+        offset="0.0"/>
+
+      <!-- 模块 4：STM32 H=ID8，V=ID7 -->
+      <xacro:snake_control_joint
+        joint_name="pitch_joint_4"
+        servo_id="7"
+        direction="1"
+        offset="0.0"/>
+
+      <xacro:snake_control_joint
+        joint_name="yaw_joint_4"
+        servo_id="8"
+        direction="1"
+        offset="0.0"/>
+
+    </ros2_control>
+
+  </xacro:macro>
+
+</robot>

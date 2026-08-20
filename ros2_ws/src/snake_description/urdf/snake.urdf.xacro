@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot
+  xmlns:xacro="http://www.ros.org/wiki/xacro"
+  name="nake_robot">
+<!--这个文件是主要的文件集成-->
+  <!-- 启动参数 -->
+  <!--默认使用单片机的串口通讯-->
+
+  <xacro:arg name="use_mock_hardware" default="true"/>
+  <xacro:arg name="serial_port" default="/dev/ttyACM0"/>
+
+
+<!--导入前面定义的蛇形机器人的所有几何参数-->
+  <xacro:include
+    filename="$(find snake_description)/urdf/snake_links.xacro"/>
+
+  <xacro:include
+    filename="$(find snake_description)/urdf/snake.ros2_control.xacro"/>
+
+  <!-- 蛇头 -->
+
+  <xacro:snake_head name="base_link"/>
+    <!--
+    第一个关节位于蛇头尾端。
+    后续关节位于前一个 segment 的尾端。
+  -->
+    <xacro:snake_dual_axis_module
+    parent="base_link"
+    index="1"
+    origin_x="${head_length / 2.0}"/>
+
+  <xacro:snake_dual_axis_module
+    parent="segment_1"
+    index="2"
+    origin_x="${segment_length}"/>
+
+  <xacro:snake_dual_axis_module
+    parent="segment_2"
+    index="3"
+    origin_x="${segment_length}"/>
+
+  <xacro:snake_dual_axis_module
+    parent="segment_3"
+    index="4"
+    origin_x="${segment_length}"/>
+
+  <!-- ros2_control 描述 -->
+
+  <xacro:snake_ros2_control
+    use_mock_hardware="$(arg use_mock_hardware)"
+    serial_port="$(arg serial_port)"/>
+
+</robot>
+
+

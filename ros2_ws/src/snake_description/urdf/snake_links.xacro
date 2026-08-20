@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+
+<!--定义三组颜色-->
+  <material name="snake_green">
+    <color rgba="0.15 0.65 0.25 1.0"/>
+  </material>
+
+  <material name="joint_gray">
+    <color rgba="0.35 0.35 0.35 1.0"/>
+  </material>
+
+  <material name="head_blue">
+    <color rgba="0.10 0.30 0.80 1.0"/>
+  </material>
+
+<!--待测量的舵机与蛇的尺寸-->
+  <xacro:property name="head_length" value="0.12"/>
+  <xacro:property name="segment_length" value="0.12"/>
+  <xacro:property name="segment_width" value="0.065"/>
+  <xacro:property name="segment_height" value="0.055"/>
+
+  <xacro:property name="head_mass" value="0.35"/>
+  <xacro:property name="segment_mass" value="0.30"/>
+  <xacro:property name="carrier_mass" value="0.05"/>
+
+  <xacro:property name="joint_radius" value="0.030"/>
+  <xacro:property name="joint_length" value="0.025"/>
+
+
+  <!-- 长方体惯量 -->
+
+  <xacro:macro name="box_inertial" params="mass x y z">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+
+      <mass value="${mass}"/>
+
+      <inertia
+        ixx="${mass * (y * y + z * z) / 12.0}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${mass * (x * x + z * z) / 12.0}"
+        iyz="0.0"
+        izz="${mass * (x * x + y * y) / 12.0}"/>
+    </inertial>
+  </xacro:macro>
+
+
+    <!-- 蛇头 -->
+
+  <xacro:macro name="snake_head" params="name">
+    <link name="${name}">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+
+        <geometry>
+          <box size="${head_length}
+                     ${segment_width}
+                     ${segment_height}"/>
+        </geometry>
+
+        <material name="head_blue"/>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+
+        <geometry>
+          <box size="${head_length}
+                     ${segment_width}
+                     ${segment_height}"/>
+        </geometry>
+      </collision>
+
+
+      <xacro:box_inertial
+        mass="${head_mass}"
+        x="${head_length}"
+        y="${segment_width}"
+        z="${segment_height}"/>
+    </link>
+  </xacro:macro>
+
+
+
+  <!--
+    一个正交双轴关节模块。
+
+    parent:
+      前一个蛇身 link。
+
+    index:
+      模块编号，从 1 开始。
+
+    origin_x:
+      当前模块相对于 parent 原点的 X 方向位置。
+  -->
+
+
+
+  <xacro:macro name="snake_dual_axis_module"
+               params="parent index origin_x">
+
+    <!-- Pitch 中间承载 link -->
+
+    <link name="pitch_link_${index}">
+      <visual>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+
+        <geometry>
+          <cylinder
+            radius="${joint_radius}"
+            length="${joint_length}"/>
+        </geometry>
+
+        <material name="joint_gray"/>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+
+        <geometry>
+          <cylinder
+            radius="${joint_radius}"
+            length="${joint_length}"/>
+        </geometry>
+      </collision>
+
+      <xacro:box_inertial
+        mass="${carrier_mass}"
+        x="${joint_length}"
+        y="${joint_radius * 2.0}"
+        z="${joint_radius * 2.0}"/>
+    </link>
+
+     <!--
+      Pitch：绕 Y 轴旋转，产生上下弯曲。
+      STM32 映射到奇数舵机 ID。
+    -->
+     <joint name="pitch_joint_${index}" type="revolute">
+      <parent link="${parent}"/>
+      <child link="pitch_link_${index}"/>
+
+      <origin xyz="${origin_x} 0 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+
+      <!-- 初期限制为 ±60°，不要直接使用舵机 ±180° -->
+       <limit
+        lower="-1.0471976"
+        upper="1.0471976"
+        effort="10.0"
+        velocity="2.0"/>
+
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+
+
+    <!-- 当前模块之后的蛇身 -->
+<link name="segment_${index}">
+      <visual>
+        <!-- 让蛇身从关节中心向 +X 延伸 -->
+        <origin xyz="${segment_length / 2.0} 0 0"
+                rpy="0 0 0"/>
+
+        <geometry>
+          <box size="${segment_length}
+                     ${segment_width}
+                     ${segment_height}"/>
+        </geometry>
+
+        <material name="snake_green"/>
+      </visual>
+
+      <collision>
+        <origin xyz="${segment_length / 2.0} 0 0"
+                rpy="0 0 0"/>
+
+        <geometry>
+          <box size="${segment_length}
+                     ${segment_width}
+                     ${segment_height}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="${segment_length / 2.0} 0 0"
+                rpy="0 0 0"/>
+
+        <mass value="${segment_mass}"/>
+
+        <inertia
+          ixx="${segment_mass *
+                 (segment_width * segment_width +
+                  segment_height * segment_height) / 12.0}"
+          ixy="0.0"
+          ixz="0.0"
+          iyy="${segment_mass *
+                 (segment_length * segment_length +
+                  segment_height * segment_height) / 12.0}"
+          iyz="0.0"
+          izz="${segment_mass *
+                 (segment_length * segment_length +
+                  segment_width * segment_width) / 12.0}"/>
+      </inertial>
+    </link>
+
+        <!--
+      Yaw：绕 Z 轴旋转，产生水平蜿蜒。
+      STM32 映射到偶数舵机 ID。
+    -->
+
+    <joint name="yaw_joint_${index}" type="revolute">
+      <parent link="pitch_link_${index}"/>
+      <child link="segment_${index}"/>
+
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+
+      <limit
+        lower="-1.0471976"
+        upper="1.0471976"
+        effort="10.0"
+        velocity="2.0"/>
+
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>
+
+
+
+

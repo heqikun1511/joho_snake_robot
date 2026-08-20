@@ -1,0 +1,62 @@
+snake_robot:
+  joint_count: 8
+  servo_center_raw: 2048
+  servo_raw_min: 0
+  servo_raw_max: 4095
+
+  joints:
+    pitch_joint_1:
+      servo_id: 1
+      direction: 1
+      offset: 0.0
+      min: -1.0471976
+      max: 1.0471976
+
+    yaw_joint_1:
+      servo_id: 2
+      direction: 1
+      offset: 0.0
+      min: -1.0471976
+      max: 1.0471976
+
+    pitch_joint_2:
+      servo_id: 3
+      direction: 1
+      offset: 0.0
+      min: -1.0471976
+      max: 1.0471976
+
+    yaw_joint_2:
+      servo_id: 4
+      direction: 1
+      offset: 0.0
+      min: -1.0471976
+      max: 1.0471976
+
+    pitch_joint_3:
+      servo_id: 5
+      direction: 1
+      offset: 0.0
+      min: -1.0471976
+      max: 1.0471976
+
+    yaw_joint_3:
+      servo_id: 6
+      direction: 1
+      offset: 0.0
+      min: -1.0471976
+      max: 1.0471976
+
+    pitch_joint_4:
+      servo_id: 7
+      direction: 1
+      offset: 0.0
+      min: -1.0471976
+      max: 1.0471976
+
+    yaw_joint_4:
+      servo_id: 8
+      direction: 1
+      offset: 0.0
+      min: -1.0471976
+      max: 1.0471976
