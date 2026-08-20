@@ -1,0 +1,14 @@
+.git
+.vscode
+ros2_ws/build
+ros2_ws/install
+ros2_ws/log
+firmware/stm32f407_snake/build
+**/__pycache__
+**/*.pyc
+**/*.o
+**/*.d
+**/*.elf
+**/*.hex
+**/*.bin
+**/*.map
