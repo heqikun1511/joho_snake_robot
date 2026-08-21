@@ -1,0 +1,28 @@
+services:
+  ros2_snake:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+
+    image: ros2-snake:jazzy
+    container_name: ros2_snake_dev
+
+    network_mode: host
+    ipc: host
+
+    environment:
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-0}
+      RMW_IMPLEMENTATION: rmw_fastrtps_cpp
+      ROS_LOCALHOST_ONLY: "0"
+
+    volumes:
+      - .:/workspace/ros2_snake
+
+    working_dir: /workspace/ros2_snake
+    stdin_open: true
+    tty: true
+
+    command: bash
