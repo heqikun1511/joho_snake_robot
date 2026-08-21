@@ -25,18 +25,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 
-ARG USER_ID=1000
-ARG GROUP_ID=1000
-
-#声明两个构建参数，默认值都是 1000（通常是宿主机第一个普通用户的 UID/GID）。
-#声明两个构建参数，默认值都是 1000（通常是宿主机第一个普通用户的 UID/GID）。
-RUN groupadd --gid ${GROUP_ID} developer \
-    && useradd --uid ${USER_ID} \
-               --gid ${GROUP_ID} \
-               --create-home \
-               --shell /bin/bash \
-               developer \
-    && usermod -aG dialout developer
+# Ubuntu 24.04 基础镜像已经提供 UID/GID 1000 的 ubuntu 用户。
+# 复用它可避免重复创建 GID 1000，并保持挂载源码的权限与宿主机一致。
+RUN usermod -aG dialout ubuntu
 
 WORKDIR /workspace/ros2_snake
 
@@ -44,7 +35,7 @@ WORKDIR /workspace/ros2_snake
 COPY docker/ros_entrypoint.sh /ros_entrypoint.sh
 RUN chmod +x /ros_entrypoint.sh
 
-USER developer
+USER ubuntu
 
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 

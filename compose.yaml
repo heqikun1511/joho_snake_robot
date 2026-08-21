@@ -3,9 +3,6 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-      args:
-        USER_ID: ${USER_ID:-1000}
-        GROUP_ID: ${GROUP_ID:-1000}
 
     image: ros2-snake:jazzy
     container_name: ros2_snake_dev
