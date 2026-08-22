@@ -1,0 +1,83 @@
+Panels:
+#左侧显示面按与右侧视图面版
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+
+
+Visualization Manager:
+  Class: ""
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: base_link
+    Frame Rate: 30
+
+
+  Displays:
+  #显示项目1
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Cell Size: 0.1
+      Plane: XY
+      Plane Cell Count: 20   #20x202网格
+      Reference Frame: base_link
+      Alpha: 0.5    #透明度
+      Color: 160; 160; 164
+
+    - Class: 
+
+#显示项目2
+rviz_default_plugins/RobotModel:
+      Name: RobotModel
+      Enabled: true
+      Visual Enabled: true
+      Collision Enabled: false
+      Alpha: 1.0
+      Description Source: Topic
+      Description Topic:
+        Value: /robot_description
+        Reliability Policy: Reliable
+        Durability Policy: Transient Local 
+Local:
+      History Policy: Keep Last
+      Depth: 5        
+
+
+
+      Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Frame Timeout: 15
+      Marker Scale: 0.15
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true      
+
+Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+    - Class: rviz_default_plugins/SetInitialPose
+      Topic:
+        Value: /initialpose
+    - Class: rviz_default_plugins/SetGoal
+      Topic:
+        Value: /goal_pose
+
+Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Name: Current View
+      Target Frame: base_link
+      Distance: 1.0
+      Pitch: 0.5
+      Yaw: 0.8
+      Focal Point:
+        X: 0.25
+        Y: 0.0
+        Z: 0.0
+    Saved: ~
