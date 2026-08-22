@@ -1,0 +1,23 @@
+
+//这个 TypeScript + React 面板的编译/类型检查规则。
+
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    //强制 import 里的文件名大小写必须和真实文件一致
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "lib": ["DOM", "ES2021"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    // 注意：不要设置 "noEmit": true，
+    // ts-loader 需要 TypeScript 输出 JS 才能被 webpack 打包，否则会报 "TypeScript emitted no output"。
+    "skipLibCheck": true,
+    //严格模式
+    "strict": true,
+    //编译目标
+    "target": "ES2021"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}
