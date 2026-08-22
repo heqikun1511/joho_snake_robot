@@ -26,6 +26,10 @@ firmware/stm32f407_snake/build/
 *.su
 *.dis
 
+# ================= Foxglove extensions build artifacts =================
+foxglove_extensions/*/dist/
+foxglove_extensions/*/node_modules/
+
 # ================= VS Code (keep settings, ignore IntelliSense DB) =================
 .vscode/*.db
 .vscode/*.db-shm
@@ -38,3 +42,15 @@ firmware/stm32f407_snake/build/
 *~
 .DS_Store
 Thumbs.db
+
+
+*.js
+*.ts
+*.tcs
+*.mjs
+*.json
+*.mts
+LICENSE
+*.jst
+*.cls
+
