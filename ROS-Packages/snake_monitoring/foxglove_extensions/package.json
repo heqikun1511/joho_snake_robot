@@ -1,0 +1,20 @@
+{
+  "name": "snake-monitoring-extension",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "foxglove-extension build",
+    "dev": "foxglove-extension dev",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@foxglove/extension": "^1.0.0",
+    "typescript": "^5.0.0"
+  },
+  "foxglove": {
+    "id": "snake.monitoring.extension",
+    "displayName": "Snake Monitoring",
+    "icon": "DataObject",
+    "module": "./dist/index.js"
+  }
+}
