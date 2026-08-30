@@ -1,6 +1,24 @@
-# Foxglove extensions for snake_monitoring
+# 蛇形机器人 Foxglove 控制台
 
-This folder keeps the custom Foxglove extension sources associated with the ROS monitoring package.
+当前目录已恢复历史版本中的蛇形机器人上位机界面，并迁移到新的 ROS monitoring 目录结构。
+
+## 界面功能
+
+- 机器人连接、标识码和 LED 控制
+- 通用、木偶式、导向式和目标式四种控制模式
+- 八关节仿生脊柱姿态与角度调节
+- ROS 2 命令发送和实时遥测数据显示
+- RGB、深度图和三维重建三路图像窗口
+
+## 构建与安装
+
+```bash
+npm install
+npm run build
+npm run local-install
+```
+
+在 Foxglove 的面板列表中添加“蛇形机器人”即可。
 
 ## Purpose
 - Preserve Foxglove custom UI logic and plugins.

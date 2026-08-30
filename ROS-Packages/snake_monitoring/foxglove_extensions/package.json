@@ -1,20 +1,27 @@
 {
-  "name": "snake-monitoring-extension",
+  "name": "snake-control-panel",
+  "displayName": "蛇形机器人",
+  "description": "蛇形机器人控制与状态监视面板",
+  "publisher": "Snake Robot Team",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "main": "./dist/extension.js",
   "scripts": {
     "build": "foxglove-extension build",
-    "dev": "foxglove-extension dev",
+    "local-install": "foxglove-extension install",
+    "package": "foxglove-extension package",
     "lint": "tsc --noEmit"
   },
   "devDependencies": {
-    "@foxglove/extension": "^1.0.0",
-    "typescript": "^5.0.0"
-  },
-  "foxglove": {
-    "id": "snake.monitoring.extension",
-    "displayName": "Snake Monitoring",
-    "icon": "DataObject",
-    "module": "./dist/index.js"
+    "@foxglove/studio": "1.83.0",
+    "@types/react": "18.2.46",
+    "@types/react-dom": "18.2.18",
+    "create-foxglove-extension": "0.8.6",
+    "css-loader": "^6.10.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "style-loader": "^3.3.4",
+    "typescript": "5.3.3"
   }
 }
