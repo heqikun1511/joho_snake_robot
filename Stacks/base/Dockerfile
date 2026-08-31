@@ -1,5 +1,5 @@
-# syntax=docker/dockerfile:1.7
-FROM ros:jazzy-ros-base-noble
+ARG ROS_BASE_IMAGE=ros:jazzy-ros-base-noble
+FROM ${ROS_BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive \
     ROS_DISTRO=jazzy \
