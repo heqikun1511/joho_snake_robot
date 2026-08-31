@@ -2,7 +2,13 @@
 ros2_ws/build/
 ros2_ws/install/
 ros2_ws/log/
+build/
+install/
+log/
 .colcon/
+/build/
+/install/
+/log/
 
 # Python / ROS2 python packages
 __pycache__/
@@ -16,6 +22,7 @@ __pycache__/
 
 # ================= STM32 firmware build artifacts =================
 firmware/stm32f407_snake/build/
+firmware/**/build/
 *.o
 *.d
 *.lst
@@ -25,6 +32,7 @@ firmware/stm32f407_snake/build/
 *.map
 *.su
 *.dis
+*.log
 
 # ================= VS Code (keep settings, ignore IntelliSense DB) =================
 .vscode/*.db

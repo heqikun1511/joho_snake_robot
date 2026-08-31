@@ -1,0 +1,22 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    snake_position_controller:
+      type: forward_command_controller/ForwardCommandController
+
+snake_position_controller:
+  ros__parameters:
+    joints:
+      - joint_1_yaw
+      - joint_1_pitch
+      - joint_2_yaw
+      - joint_2_pitch
+      - joint_3_yaw
+      - joint_3_pitch
+      - joint_4_yaw
+      - joint_4_pitch
+    interface_name: position
