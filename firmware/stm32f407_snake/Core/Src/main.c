@@ -18,6 +18,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "can.h"
+#include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -30,7 +33,7 @@
 #include "math.h"
 #include "step.h"
 #include "gait.h"
-
+#include "spi.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -83,7 +86,7 @@ static void RunServoIdSetup(void);
 #endif
 /* USER CODE END PFP */
 
-/* Private user code ---------------------------------------------------------*/                                                                                                                                                                                                                                                                                                                                                                                               
+/* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 /* USART1 直接寄存器方式发送一个字节（绕过HAL，纯硬件测试） */
 // static void USART1_SendByte(uint8_t byte)
@@ -225,209 +228,29 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_CAN2_Init();
+  MX_SPI3_Init();
+  MX_TIM1_Init();
+  MX_TIM2_Init();
   MX_USART1_UART_Init();
+  MX_USART2_UART_Init();
   MX_USART3_UART_Init();
-  MX_USART6_UART_Init();
+  MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
 
-  /* === 初始化舵机USART === */
-  USART_InitServoUsart(&huart3);
+  /* USER CODE END 2 */
 
-#if SERVO_ID_SETUP_MODE
-  /*
-   * ID配置模式不会进入步态。程序使用TARGET_SERVO_ID广播修改当前
-   * 唯一连接舵机的ID，并自动Ping新ID验证。
-   */
-  RunServoIdSetup();
-#endif
-
-  /* ============================================================
-   *  蛇形机器人水平蜿蜒步态调试
-   *
-   *  配置宏在 USER CODE BEGIN PD 中修改:
-   *    SNAKE_JOINT_COUNT   正交双舵机关节模块数
-   *    GAIT_BASE_ID        起始舵机ID
-   * ============================================================ */
-  printf("\r\n========================================\r\n");
-  printf("  Planar Serpentine Gait Debug\r\n");
-  printf("========================================\r\n");
-  printf("  Joints: %u, Base ID: %u\r\n",
-         SNAKE_JOINT_COUNT, GAIT_BASE_ID);
-  printf("  Status poll: one servo / %u ms\r\n", STATUS_POLL_INTERVAL_MS);
-  printf("========================================\r\n\n");
-
-  GaitController gc;
-  Gait_Init(&gc, SNAKE_JOINT_COUNT);
-
-  /*
-   * 当前实机观察到ID1、ID5产生上下弯曲，因此交换每对舵机的轴映射:
-   * 偶数ID作为平面蜿蜒水平轴H，奇数ID作为保持中位的垂直轴V。
-   * Joint0 H=2/V=1, Joint1 H=4/V=3,
-   * Joint2 H=6/V=5, Joint3 H=8/V=7。
-   */
-  for (uint8_t joint = 0; joint < SNAKE_JOINT_COUNT; joint++) {
-      uint8_t vertical_id = GAIT_BASE_ID + joint * 2;
-      uint8_t horizontal_id = vertical_id + 1;
-      Gait_SetJointMappingEx(
-          &gc, joint,
-          horizontal_id, vertical_id,
-          1, 1,
-          0.0f, 0.0f);
-  }
-
-  /*
-   * 水平蜿蜒：水平轴形成行波，垂直轴始终保持中位。
-   * 45°大振幅便于辨认轴映射和运动方向。
-   */
-  Gait_ConfigurePlanarSerpentine(
-      &gc,
-      SERPENTINE_AMPLITUDE_DEG,
-      SERPENTINE_PERIOD_S,
-      SERPENTINE_JOINT_PHASE_DEG);
-  Gait_SetRampDuration(&gc, 3000);
-  Gait_Restart(&gc);
-
-  uint8_t map_status = Gait_ValidateMapping(&gc);
-  printf("[Map] validate=%u (0=OK)\r\n", map_status);
-  for (uint8_t joint = 0; joint < gc.joint_count; joint++) {
-      printf("[Map] Joint%u H=ID%u(dir=%d,off=%.1f) "
-             "V=ID%u(dir=%d,off=%.1f)\r\n",
-             joint,
-             gc.mapping[joint].yaw_servo_id,
-             gc.mapping[joint].yaw_direction,
-             gc.mapping[joint].yaw_offset_deg,
-             gc.mapping[joint].pitch_servo_id,
-             gc.mapping[joint].pitch_direction,
-             gc.mapping[joint].pitch_offset_deg);
-  }
-
-  /* 正常步态调试不依赖舵机回包；直接打开映射中所有舵机扭矩。 */
-  uint8_t center_ids[GAIT_MAX_JOINTS * 2];
-  uint16_t center_positions[GAIT_MAX_JOINTS * 2];
-  uint16_t center_intervals[GAIT_MAX_JOINTS * 2];
-  uint8_t center_count = 0;
-
-  for (uint8_t joint = 0; joint < gc.joint_count; joint++) {
-      uint8_t ids[2] = {
-          gc.mapping[joint].yaw_servo_id,
-          gc.mapping[joint].pitch_servo_id
-      };
-      for (uint8_t axis = 0; axis < 2; axis++) {
-          if (ids[axis] == 0) continue;
-          SET_Torque(servoUsart, ids[axis], 1);
-          center_ids[center_count] = ids[axis];
-          center_positions[center_count] = SERVO_CENTER_RAW;
-          center_intervals[center_count] = 1000;
-          center_count++;
-      }
-  }
-
-  printf("[Init] Centering %u servos and holding for %lu ms...\r\n",
-         center_count, (unsigned long)SERVO_CENTER_HOLD_MS);
-  if (center_count > 0) {
-      USL_SyncWriteAngles(servoUsart,
-                          center_ids,
-                          center_positions,
-                          center_intervals,
-                          center_count);
-  }
-  SysTick_DelayMs(SERVO_CENTER_HOLD_MS);
-
-  /* 回中完成后逐个检查实际位置，找出未到达中位的舵机。 */
-  printf("[ZeroCheck] Expected raw=%u, tolerance=+/-%.1f deg\r\n",
-         SERVO_CENTER_RAW,
-         SERVO_CENTER_TOLERANCE_RAW * 360.0f / 4095.0f);
-  uint8_t zero_error_count = 0;
-  for (uint8_t i = 0; i < center_count; i++) {
-      uint16_t position = USL_GETPositionVal(servoUsart, center_ids[i]);
-      if (position == 0xFFFF) {
-          printf("[ZeroCheck] ID=%u READ_FAIL\r\n", center_ids[i]);
-          zero_error_count++;
-          continue;
-      }
-
-      uint16_t error_raw = position > SERVO_CENTER_RAW
-                               ? position - SERVO_CENTER_RAW
-                               : SERVO_CENTER_RAW - position;
-      float error_deg = ((int32_t)position - (int32_t)SERVO_CENTER_RAW)
-                        * 360.0f / 4095.0f;
-      printf("[ZeroCheck] ID=%u raw=%u error=%+.1f deg %s\r\n",
-             center_ids[i], position, error_deg,
-             error_raw > SERVO_CENTER_TOLERANCE_RAW ? "ERROR" : "OK");
-      if (error_raw > SERVO_CENTER_TOLERANCE_RAW) {
-          zero_error_count++;
-      }
-  }
-  printf("[ZeroCheck] Result: %u abnormal/read-failed servo(s)\r\n",
-         zero_error_count);
-
-  Gait_Restart(&gc);
-  printf("[Init] Center done, start planar serpentine gait.\r\n");
-
-  uint32_t last_status_poll = 0;
-  uint8_t status_cursor = 0;
-  uint32_t last_debug_print = 0;
-
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
   {
-    uint32_t tick = HAL_GetTick();
-
-    /* 同步写让映射中的所有舵机在同一控制周期更新目标位置 */
-    Gait_UpdateSync(&gc, tick);
-
-    /* LED闪烁: 指示程序运行中 (1Hz) */
-    if ((tick / 500) % 2 == 0) {
-        HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);  // DS0亮
-    } else {
-        HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);    // DS0灭
-    }
-
-    if (tick - last_debug_print >= 1000U) {
-        last_debug_print = tick;
-        printf("[Run] tick=%lu ms usart3_rx=%lu\r\n",
-               tick, usart3_rx_count);
-    }
-
-    /*
-     * 角度/电流读取会占用半双工总线，所以低频、轮转读取。
-     * 即使读取失败，也继续发送螺旋翻滚步态。
-     */
-    if (tick - last_status_poll >= STATUS_POLL_INTERVAL_MS) {
-        last_status_poll = tick;
-
-        uint8_t slot_count = gc.joint_count * 2;
-        uint8_t slot = status_cursor;
-        status_cursor = (uint8_t)((status_cursor + 1) % slot_count);
-
-        uint8_t joint = slot / 2;
-        uint8_t axis = slot & 1;
-        uint8_t id = axis == 0
-                         ? gc.mapping[joint].yaw_servo_id
-                         : gc.mapping[joint].pitch_servo_id;
-
-        if (id != 0) {
-            uint16_t position = USL_GETPositionVal(servoUsart, id);
-            int16_t current = USL_GetCurrent(servoUsart, id);
-
-            if (position != 0xFFFF && current != (int16_t)0xFFFF) {
-                printf("[Status] Joint%u %s ID=%u angle=%+.1fdeg raw=%u current=%d\r\n",
-                       joint, axis == 0 ? "H" : "V", id,
-                       RawToRelativeDegree(position), position, current);
-            } else {
-                printf("[Status] Joint%u %s ID=%u READ_FAIL pos=%u current=%d\r\n",
-                       joint, axis == 0 ? "H" : "V", id, position, current);
-            }
-        }
-    }
-
-    /* 控制周期 ~20ms */
-    SysTick_DelayMs(20);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
+
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -449,8 +272,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 168;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
