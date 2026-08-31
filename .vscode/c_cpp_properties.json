@@ -1,19 +1,26 @@
 {
   "configurations": [
     {
-      "browse": {
-        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db",
-        "limitSymbolsToIncludedHeaders": false
-      },
+      "name": "stm32f407",
       "includePath": [
-        "/home/amoy/ros2_ws/ros2_level3/install/robot_interface/include/**",
-        "/opt/ros/jazzy/include/**",
-        "/home/amoy/F407_active/ros2_snake/snake_driver/include/**",
-        "/home/amoy/F407_active/ros2_snake/snake_ros/include/**",
-        "/home/amoy/F407_active/ros2_snake/snake_teleop/include/**",
+        "${workspaceFolder}/firmware/stm32f407_snake",
+        "${workspaceFolder}/firmware/stm32f407_snake/Core/Inc",
+        "${workspaceFolder}/firmware/stm32f407_snake/Application",
+        "${workspaceFolder}/firmware/stm32f407_snake/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+        "${workspaceFolder}/firmware/stm32f407_snake/Drivers/CMSIS/Include",
+        "${workspaceFolder}/firmware/stm32f407_snake/Drivers/CMSIS/Core/Include",
+        "${workspaceFolder}/firmware/stm32f407_snake/Drivers/STM32F4xx_HAL_Driver/Inc",
+        "${workspaceFolder}/firmware/stm32f407_snake/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+        "${workspaceFolder}/firmware/stm32f407_snake/Drivers/Board/ring_buffer",
+        "${workspaceFolder}/firmware/stm32f407_snake/Drivers/Board/joho_servo",
         "/usr/include/**"
       ],
-      "name": "ros2",
+      "browse": {
+        "path": [
+          "${workspaceFolder}/firmware/stm32f407_snake"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      },
       "intelliSenseMode": "gcc-x64",
       "compilerPath": "/usr/bin/gcc",
       "cStandard": "gnu11",

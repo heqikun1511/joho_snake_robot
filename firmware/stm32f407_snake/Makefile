@@ -59,6 +59,7 @@ Core/Src/system_stm32f4xx.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
 Core/Src/sys_tick.c \
+Core/Src/spi_slave_link.c \
 Core/Src/test_servo.c \
 Drivers/Board/ring_buffer/ring_buffer.c \
 Drivers/Board/joho_servo/uart_servo_lite.c \
@@ -207,6 +208,20 @@ $(BUILD_DIR):
 #######################################
 clean:
 	-rm -fR $(BUILD_DIR)
+
+#######################################
+# flash with ST-Link
+#######################################
+STFLASH ?= st-flash
+FLASH_ADDRESS ?= 0x08000000
+
+flash: $(BUILD_DIR)/$(TARGET).bin
+	$(STFLASH) --reset write $< $(FLASH_ADDRESS)
+
+erase:
+	$(STFLASH) erase
+
+.PHONY: all clean flash erase
   
 #######################################
 # dependencies

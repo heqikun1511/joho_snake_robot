@@ -33,7 +33,7 @@
 #include "math.h"
 #include "step.h"
 #include "gait.h"
-#include "spi.h"
+#include "spi_slave_link.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -235,8 +235,8 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
-  MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
+  SPI_SlaveLink_Start();
 
   /* USER CODE END 2 */
 
@@ -244,8 +244,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    SPI_SlaveLink_Process();
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
