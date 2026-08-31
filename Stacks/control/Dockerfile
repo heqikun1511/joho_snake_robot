@@ -1,4 +1,5 @@
-FROM ros:jazzy-ros-base-noble
+ARG BASE_IMAGE=snake-ros-base:jazzy
+FROM ${BASE_IMAGE}
 
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -8,23 +9,17 @@ ENV LC_ALL=C.UTF-8
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    git \
-    python3-colcon-common-extensions \
-    python3-rosdep \
-    python3-vcstool \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     ros-jazzy-control-msgs \
     ros-jazzy-controller-manager \
     ros-jazzy-hardware-interface \
     ros-jazzy-joint-state-publisher \
     ros-jazzy-robot-state-publisher \
-    ros-jazzy-rmw-fastrtps-cpp \
     ros-jazzy-ros2-control \
     ros-jazzy-ros2-controllers \
-    ros-jazzy-serial-driver \
-    && rm -rf /var/lib/apt/lists/*
+    ros-jazzy-serial-driver
 
 WORKDIR /opt/snake_ws
 
@@ -40,8 +35,7 @@ COPY ROS-Packages/snake_safety src/snake_safety
 COPY ROS-Packages/snake_bringup src/snake_bringup
 
 
-RUN rosdep update && \
-    rosdep install \
+RUN rosdep install \
       --from-paths src \
       --ignore-src \
       --rosdistro "${ROS_DISTRO}" \

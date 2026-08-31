@@ -1,4 +1,5 @@
-FROM ros:jazzy-ros-base-noble
+ARG BASE_IMAGE=snake-ros-base:jazzy
+FROM ${BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ROS_DISTRO=jazzy
@@ -6,23 +7,17 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
-    cmake \
-    git \
     nodejs \
     npm \
-    python3-colcon-common-extensions \
-    python3-rosdep \
-    python3-vcstool \
     ros-jazzy-diagnostic-aggregator \
     ros-jazzy-diagnostic-msgs \
     ros-jazzy-foxglove-bridge \
-    ros-jazzy-rmw-fastrtps-cpp \
     ros-jazzy-rosbridge-suite \
-    ros-jazzy-sensor-msgs \
-    && rm -rf /var/lib/apt/lists/*
+    ros-jazzy-sensor-msgs
 
 WORKDIR /opt/snake_ws
 
@@ -32,8 +27,7 @@ COPY ROS-Packages/snake_description src/snake_description
 COPY ROS-Packages/snake_monitoring src/snake_monitoring
 COPY Stacks/monitoring/foxglove /opt/snake_monitoring/foxglove
 
-RUN rosdep update && \
-    rosdep install \
+RUN rosdep install \
       --from-paths src \
       --ignore-src \
       --rosdistro "${ROS_DISTRO}" \

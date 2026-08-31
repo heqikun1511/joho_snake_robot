@@ -1,4 +1,5 @@
-FROM ros:jazzy-ros-base-noble
+ARG BASE_IMAGE=snake-ros-base:jazzy
+FROM ${BASE_IMAGE}
 # 避免 Docker 构建因为等待键盘输入而卡住。
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ROS_DISTRO=jazzy
@@ -7,23 +8,17 @@ ENV LC_ALL=C.UTF-8
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    git \
-    python3-colcon-common-extensions \
-    python3-rosdep \
-    python3-vcstool \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     ros-jazzy-geometry-msgs \
     ros-jazzy-nav2-bringup \
     ros-jazzy-navigation2 \
-    ros-jazzy-rmw-fastrtps-cpp \
     ros-jazzy-robot-state-publisher \
     ros-jazzy-sensor-msgs \
     ros-jazzy-tf2 \
     ros-jazzy-tf2-geometry-msgs \
-    ros-jazzy-tf2-ros \
-    && rm -rf /var/lib/apt/lists/*
+    ros-jazzy-tf2-ros
 
 # 将 /opt/snake_ws 设置为 ROS 2 工作空间。
 # 使用 /opt 而不是用户主目录，适合容器内的固定部署。
@@ -38,8 +33,7 @@ COPY ROS-Packages/snake_safety src/snake_safety
 
 
 # 根据各 ROS 包的 package.xml 自动安装系统依赖。
-RUN rosdep update && \
-    rosdep install \
+RUN rosdep install \
       --from-paths src \
       --ignore-src \
       --rosdistro "${ROS_DISTRO}" \
