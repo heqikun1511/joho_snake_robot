@@ -29,11 +29,21 @@ echo "正在 Raspberry Pi 上构建公共 ROS 2 基础镜像..."
 echo "基础镜像：$ROS_BASE_IMAGE"
 echo "输出镜像：$IMAGE_NAME"
 
-DOCKER_BUILDKIT=1 docker build \
-  --build-arg "ROS_BASE_IMAGE=$ROS_BASE_IMAGE" \
-  --tag "$IMAGE_NAME" \
-  --file "$DOCKERFILE" \
-  "$PROJECT_ROOT/Stacks/base"
+if docker buildx version >/dev/null 2>&1; then
+  echo "构建方式：BuildKit"
+  DOCKER_BUILDKIT=1 docker build \
+    --build-arg "ROS_BASE_IMAGE=$ROS_BASE_IMAGE" \
+    --tag "$IMAGE_NAME" \
+    --file "$DOCKERFILE" \
+    "$PROJECT_ROOT/Stacks/base"
+else
+  echo "构建方式：Docker 传统构建器（未检测到 Buildx）"
+  DOCKER_BUILDKIT=0 docker build \
+    --build-arg "ROS_BASE_IMAGE=$ROS_BASE_IMAGE" \
+    --tag "$IMAGE_NAME" \
+    --file "$DOCKERFILE" \
+    "$PROJECT_ROOT/Stacks/base"
+fi
 
 ARCH="$(docker image inspect "$IMAGE_NAME" --format '{{.Os}}/{{.Architecture}}')"
 
