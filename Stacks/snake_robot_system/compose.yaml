@@ -17,7 +17,7 @@ x-common: &common
   network_mode: host
   # 允许容器使用宿主机 IPC，
   # 对部分 DDS 共享内存传输方式更友好。
-  ipc: host
+  ipc: ros2snake
     # Docker 停止容器时使用 init 正确处理子进程和退出信号。
   init: true
 
