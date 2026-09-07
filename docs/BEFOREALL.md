@@ -91,6 +91,30 @@ git switch -c feature/<简短任务名>
 
 注意：示例中的 `ros2` 是当前 ROS 2 集成分支。实际开发前应确认团队当期的目标分支，固件任务也可能以固件分支为基线。
 
+### 3.1 当前各分支内容
+
+以下内容根据仓库中现有的本地及 `origin` 分支记录
+
+| 分支 | 当前主要内容 | 状态说明 |
+| --- | --- | --- |
+| `ros2` | 当前项目目录架构、ROS 2 包规划、control/autonomy/monitoring 容器、Docker 构建脚本及 STM32 基础工程 | 当前默认分支和 ROS 2 集成基线 |
+| `feature/robot-description_control` | `snake_description` 的 URDF/Xacro 模型、模型查看 launch，以及基于 mock hardware 的 ros2_control bringup 和控制器配置 | 已完成初步模型与 mock control 验证，尚需补充真实舵机参数和真机接入 |
+| `firmwork` | STM32 SPI3 从机通信链路，包括 `spi_slave_link`、主循环接入、Makefile 和固件说明 | 已完成树莓派与单片机 SPI3 初步通信搭建，仍需纳入上层完整协议和整机验证 |
+| `feature/robot-description` | 早期 `snake_description`、关节标定配置、URDF/Xacro、RViz 配置和显示 launch | 已完成早期 RViz2 可视化搭建；目录结构较旧，后续成果已在其他分支持续演进 |
+| `feature/robot-bringup` | 早期 bringup、Docker 启停脚本以及 Foxglove 蛇形机器人控制面板 | 上位机界面已有实现，但提交说明明确标注尚未对接 ROS 2 节点；目录结构较旧 |
+| `feature/robot-firmware` | STM32 上位机通信协议文档与头文件，以及早期 ROS 2 工作区、模型和接口骨架 | 以协议设计和工程骨架为主，多个源文件仍为空，不应视为可运行的完整硬件接入模块 |
+| `main` | 早期 Dockerfile、Compose 和 ROS 入口脚本 | 旧版容器方案，目前不是默认集成分支 |
+
+本地目前检出的分支有 `ros2`、`firmwork` 和 `feature/robot-description_control`；其余分支仅存在于 `origin` 远程跟踪记录中。开始任务前先运行 `git fetch origin --prune` 获取最新状态，再用下面的命令确认分支是否已经合并：
+
+```bash
+git branch -a
+git log --graph --oneline --decorate --all
+git branch --merged ros2
+```
+
+不要直接删除看似“旧”的分支。应先确认其中是否仍有未合并提交，并由该模块负责人决定合并、保留或删除。
+
 提交前必须查看修改范围：
 
 ```bash
