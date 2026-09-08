@@ -9,7 +9,6 @@ from launch.substitutions import (
 )
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-from geometry_msgs.msg import Twist
 
 
 def generate_launch_description():
@@ -101,7 +100,6 @@ def generate_launch_description():
             "publish_rate": 50.0,
             "yaw_amplitude": 0.15,
             "pitch_amplitude": 0.0,
-            "frequency": 0.15,
             "phase_difference": 0.8,
         }
     ],
@@ -116,7 +114,7 @@ def generate_launch_description():
             controller_manager,
             joint_state_broadcaster,
             position_controller,
+            gait_controller,
             rviz,
         ]
     )
-
