@@ -64,6 +64,7 @@ Drivers/Board/ring_buffer/ring_buffer.c \
 Drivers/Board/joho_servo/uart_servo_lite.c \
 Application/step.c \
 Application/gait.c \
+Application/host_protocol.c \
 Core/Src/can.c \
 Core/Src/spi.c \
 Core/Src/tim.c \

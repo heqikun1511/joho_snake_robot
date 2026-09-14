@@ -1,6 +1,7 @@
 import type { Immutable, MessageEvent, PanelExtensionContext, RenderState } from "@foxglove/studio";
 import type { TelemetryLine, UiCommand } from "./types";
 
+//定义了需要的ros2节点
 export const TOPICS = {
   command: "/snake/ui/command",
   feedback: "/snake/ui/feedback",
