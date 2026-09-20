@@ -49,8 +49,8 @@
           <div class="mobile-logo"><span>灵</span> 灵蛇智采</div>
           <div class="login-heading">
             <span class="login-kicker">MEMBER PORTAL</span>
-            <h2>进入项目工作台</h2>
-            <p>填写真实姓名、设置密码并选择你的项目职责</p>
+            <h2 id="authTitle">注册项目账户</h2>
+            <p id="authDescription">首次使用请注册；注册完成后将直接进入工作台。</p>
           </div>
 
           <form id="authForm">
@@ -62,14 +62,14 @@
               </div>
             </label>
             <label>
-              <span>设置密码</span>
+              <span id="passwordLabel">设置密码</span>
               <div class="input-wrap">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" /><path d="M8 10V7a4 4 0 018 0v3" /></svg>
                 <input id="passwordInput" type="password" placeholder="至少 6 位字符" autocomplete="new-password" minlength="6" maxlength="64" required />
                 <button id="togglePassword" class="icon-button" type="button" aria-label="显示密码">查看</button>
               </div>
             </label>
-            <label>
+            <label class="registration-only">
               <span>项目职责</span>
               <div class="input-wrap select-wrap">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="3" /><circle cx="17" cy="7" r="2" /><path d="M2.5 20a5.5 5.5 0 0111 0M13 19a4 4 0 018 0" /></svg>
@@ -84,17 +84,18 @@
                 </select>
               </div>
             </label>
-            <label id="customRoleField" class="is-hidden">
+            <label id="customRoleField" class="registration-only is-hidden">
               <span>其他职责</span>
               <div class="input-wrap">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V16l11-11 3.5 3.5-11 11zM13.5 6.5l3.5 3.5" /></svg>
                 <input id="customRoleInput" type="text" placeholder="请输入你的负责内容" maxlength="30" />
               </div>
             </label>
-            <button class="primary-button" type="submit"><span>直接登录工作台</span><span>→</span></button>
+            <button id="authSubmit" class="primary-button" type="submit"><span>注册并进入工作台</span><span>→</span></button>
           </form>
 
-          <p class="prototype-note">当前为前端演示，密码只用于本次登录校验，不会保存或发送到服务器。</p>
+          <p class="switch-auth"><span id="authSwitchPrompt">已有账户？</span><button id="switchAuthMode" type="button">直接登录</button></p>
+          <p class="prototype-note">账户信息仅保存在当前浏览器；正式多人协作请接入后端认证服务。</p>
         </div>
       </section>
     </main>
@@ -109,14 +110,13 @@
           <span class="nav-label">工作台</span>
           <button class="nav-item active" data-page="overview"><span class="nav-icon">⌂</span>项目总览</button>
           <button class="nav-item" data-page="progress"><span class="nav-icon">◫</span>项目进展<span class="nav-badge">6</span></button>
-          <button class="nav-item" data-page="tracking"><span class="nav-icon">⌁</span>上位机追踪<span class="online-dot"></span></button>
-          <button class="nav-item" data-page="gitlab"><span class="nav-icon">◇</span>GitLab 开发</button>
+          <a id="gitlabLink" class="nav-item" href="http://gitlab.xmutros2snake.com"><span class="nav-icon">◇</span>GitLab 开发 <span class="external-mark">↗</span></a>
           <span class="nav-label nav-label-second">团队</span>
           <button class="nav-item" data-page="members"><span class="nav-icon">♙</span>成员管理</button>
         </nav>
         <div class="side-status">
           <div class="status-orbit"><span></span></div>
-          <div><strong>系统运行正常</strong><small>所有服务均已连接</small></div>
+          <div><strong>项目工作台</strong><small>设备监控功能未在网页开放</small></div>
         </div>
         <button id="logoutButton" class="profile" type="button">
           <span id="memberAvatar" class="avatar">林</span>
@@ -146,12 +146,10 @@
             </div>
             <div class="metric-grid">
               <article class="metric-card green"><div class="metric-icon">◉</div><div><span>项目总进度</span><strong>68<small>%</small></strong><em>本周 +6%</em></div></article>
-              <article class="metric-card orange"><div class="metric-icon">●</div><div><span>今日采摘</span><strong>127<small>颗</small></strong><em>成功率 91.4%</em></div></article>
-              <article class="metric-card blue"><div class="metric-icon">⌁</div><div><span>机器人状态</span><strong class="status-text">在线</strong><em>已运行 03:42:18</em></div></article>
               <article class="metric-card violet"><div class="metric-icon">⑂</div><div><span>待处理任务</span><strong>6<small>项</small></strong><em>2 项优先</em></div></article>
             </div>
 
-            <div class="overview-grid">
+            <div class="overview-grid overview-single">
               <article class="panel project-panel">
                 <div class="panel-title"><div><span class="section-kicker">MILESTONES</span><h2>项目进展</h2></div><button class="link-button" data-go="progress">查看全部 →</button></div>
                 <div class="big-progress"><div><strong>68%</strong><span>总体完成度</span></div><div class="progress-track"><i style="width:68%"></i></div><small>距离下一里程碑还有 12 天</small></div>
@@ -163,26 +161,12 @@
                 </div>
               </article>
 
-              <article class="panel robot-panel">
-                <div class="panel-title"><div><span class="section-kicker">LIVE ROBOT</span><h2>上位机追踪</h2></div><span class="live-tag"><i></i> LIVE</span></div>
-                <div class="robot-stage">
-                  <div class="grid-floor"></div><div class="target-ring"></div>
-                  <svg viewBox="0 0 420 170" aria-label="蛇形机器人示意">
-                    <path class="robot-path" d="M25 123C81 45 130 154 188 88s103 47 202-39" />
-                    <g class="robot-joints"><circle cx="57" cy="91" r="9"/><circle cx="103" cy="97" r="9"/><circle cx="150" cy="112" r="9"/><circle cx="190" cy="86" r="9"/><circle cx="233" cy="72" r="9"/><circle cx="278" cy="87" r="9"/><circle cx="326" cy="80" r="9"/><circle cx="370" cy="58" r="9"/></g>
-                  </svg>
-                  <span class="target-label">目标 A-17<br/><b>成熟度 94%</b></span>
-                </div>
-                <div class="telemetry-mini"><div><span>末端速度</span><strong id="speedValue">0.42 m/s</strong></div><div><span>电池电量</span><strong id="batteryValue">83%</strong></div><div><span>通信延迟</span><strong id="latencyValue">24 ms</strong></div></div>
-                <button class="wide-button" data-go="tracking">进入实时监控台 <span>→</span></button>
-              </article>
             </div>
 
             <article class="panel activity-panel">
               <div class="panel-title"><div><span class="section-kicker">ACTIVITY</span><h2>最近动态</h2></div><button class="dots-button">···</button></div>
               <div class="activity-list">
                 <div><span class="activity-icon git">◇</span><p><strong>陈工</strong> 向 <code>feature/vision-v2</code> 推送了 3 个提交<small>18 分钟前</small></p><em>GitLab</em></div>
-                <div><span class="activity-icon test">✓</span><p><strong>果园测试 #24</strong> 已完成，共识别水果 139 颗<small>今天 10:32</small></p><em>测试记录</em></div>
                 <div><span class="activity-icon task">!</span><p><strong>李工</strong> 完成任务「优化关节防碰撞策略」<small>昨天 17:48</small></p><em>项目进展</em></div>
               </div>
             </article>
@@ -194,24 +178,8 @@
             <div class="task-columns">
               <article class="task-column"><div class="column-title"><span>待处理</span><b>3</b></div><div class="task-card priority"><em>高优先级</em><h3>补充遮挡场景训练数据</h3><p>收集不同光照下的苹果枝叶遮挡样本。</p><footer><span class="avatar small">王</span><time>09月12日</time></footer></div><div class="task-card"><em>机械</em><h3>末端夹爪耐久性测试</h3><p>完成 2,000 次连续开合测试。</p><footer><span class="avatar small">刘</span><time>09月14日</time></footer></div></article>
               <article class="task-column"><div class="column-title"><span>进行中</span><b>2</b></div><div class="task-card active-task"><em>视觉算法</em><h3>成熟度识别模型 V2</h3><p>验证集准确率目标 ≥ 94%。</p><div class="card-progress"><i style="width:72%"></i></div><footer><span class="avatar small">陈</span><time>72%</time></footer></div><div class="task-card"><em>控制</em><h3>路径规划避障优化</h3><p>降低密集枝叶环境中的规划耗时。</p><footer><span class="avatar small">林</span><time>09月15日</time></footer></div></article>
-              <article class="task-column"><div class="column-title"><span>已完成</span><b>2</b></div><div class="task-card done-task"><em>✓ 已完成</em><h3>CAN 总线协议联调</h3><p>主控与十二关节通信稳定。</p><footer><span class="avatar small">林</span><time>09月08日</time></footer></div><div class="task-card done-task"><em>✓ 已完成</em><h3>上位机状态面板</h3><p>基础遥测和告警模块已合入。</p><footer><span class="avatar small">赵</span><time>09月06日</time></footer></div></article>
+              <article class="task-column"><div class="column-title"><span>已完成</span><b>2</b></div><div class="task-card done-task"><em>✓ 已完成</em><h3>CAN 总线协议联调</h3><p>主控与十二关节通信稳定。</p><footer><span class="avatar small">林</span><time>09月08日</time></footer></div><div class="task-card done-task"><em>✓ 已完成</em><h3>采摘策略评审</h3><p>完成果园试验流程与安全边界评审。</p><footer><span class="avatar small">赵</span><time>09月06日</time></footer></div></article>
             </div>
-          </section>
-
-          <section class="page" data-page-content="tracking">
-            <div class="page-heading"><div><span class="section-kicker">REAL-TIME TELEMETRY</span><h1>上位机追踪</h1><p>设备实时数据演示，后续可接入 ROS 2 WebSocket 或 MQTT。</p></div><span class="connected-pill"><i></i> ROBOT-01 已连接</span></div>
-            <div class="tracking-grid">
-              <article class="panel map-panel"><div class="panel-title"><div><span class="section-kicker">ORCHARD MAP</span><h2>果园路径与目标</h2></div><span class="map-scale">比例尺 1:200</span></div><div class="orchard-map"><div class="map-grid"></div><div class="tree-dot t1">●</div><div class="tree-dot t2">●</div><div class="tree-dot t3">●</div><div class="tree-dot t4">●</div><svg viewBox="0 0 700 360"><path d="M60 315C150 280 125 168 231 192s80 96 178 55 91-137 211-174"/><circle id="robotMarker" cx="409" cy="247" r="12"/></svg><span class="robot-map-label">ROBOT-01</span></div></article>
-              <article class="panel live-data"><div class="panel-title"><div><span class="section-kicker">TELEMETRY</span><h2>实时遥测</h2></div></div><div class="data-gauge"><div class="gauge" style="--value:83"><span><b id="gaugeBattery">83</b>%</span></div><p>电池电量<small>预计续航 2h 18m</small></p></div><div class="data-list"><div><span>末端速度</span><strong id="detailSpeed">0.42 m/s</strong></div><div><span>主控温度</span><strong id="temperatureValue">46.2 °C</strong></div><div><span>通信延迟</span><strong id="detailLatency">24 ms</strong></div><div><span>已识别目标</span><strong id="targetCount">139</strong></div><div><span>采摘成功率</span><strong>91.4%</strong></div></div><button id="pauseTelemetry" class="wide-button">暂停数据流</button></article>
-            </div>
-            <article class="panel joint-panel"><div class="panel-title"><div><span class="section-kicker">JOINT STATUS</span><h2>关节状态</h2></div><span class="muted">单位：角度 °</span></div><div id="jointBars" class="joint-bars"></div></article>
-          </section>
-
-          <section class="page" data-page-content="gitlab">
-            <div class="gitlab-hero"><div><span class="section-kicker">DEVELOPMENT CENTER</span><h1>GitLab 开发中心</h1><p>集中查看仓库、流水线和团队开发动态。</p><button id="openGitlab" class="gitlab-button">打开 GitLab 项目 <span>↗</span></button></div><div class="fox-mark">◇<span>GITLAB</span></div></div>
-            <div class="dev-metrics"><article><span>当前分支</span><strong>main</strong><small>默认保护分支</small></article><article><span>开放 Issue</span><strong>12</strong><small>3 个等待评审</small></article><article><span>合并请求</span><strong>4</strong><small>本周新增 7 个</small></article><article><span>最新流水线</span><strong class="passed">✓ 通过</strong><small>#184 · 8 分钟前</small></article></div>
-            <div class="gitlab-grid"><article class="panel"><div class="panel-title"><div><span class="section-kicker">REPOSITORIES</span><h2>项目仓库</h2></div></div><div class="repo-list"><button><span class="repo-icon">⌘</span><span><strong>snake-robot-system</strong><small>系统集成与部署配置</small></span><em>main →</em></button><button><span class="repo-icon">◈</span><span><strong>snake-robot-firmware</strong><small>STM32F407 关节控制固件</small></span><em>develop →</em></button><button><span class="repo-icon">◎</span><span><strong>vision-harvesting</strong><small>果实识别与空间定位</small></span><em>main →</em></button></div></article><article class="panel"><div class="panel-title"><div><span class="section-kicker">PIPELINE</span><h2>最近流水线</h2></div></div><div class="pipeline-list"><div><i class="success">✓</i><span><strong>build-and-test</strong><small>main · a81dc7f</small></span><em>2m 34s</em></div><div><i class="success">✓</i><span><strong>firmware-check</strong><small>feature/can-protocol</small></span><em>1m 18s</em></div><div><i class="running">↻</i><span><strong>vision-evaluation</strong><small>feature/vision-v2</small></span><em>运行中</em></div></div></article></div>
-            <div class="config-tip">提示：在 <code>app.js</code> 顶部修改 <code>GITLAB_PROJECT_URL</code>，即可连接你的真实 GitLab 项目地址。</div>
           </section>
 
           <section class="page" data-page-content="members">

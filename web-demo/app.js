@@ -1,5 +1,5 @@
-// 替换为你的真实 GitLab 项目地址，例如：https://gitlab.example.com/team/snake-robot
-const GITLAB_PROJECT_URL = "https://gitlab.com/";
+const GITLAB_URL = "http://gitlab.xmutros2snake.com";
+const ACCOUNT_STORAGE_KEY = "ling-snake-accounts-v1";
 
 const authView = document.querySelector("#authView");
 const dashboardView = document.querySelector("#dashboardView");
@@ -9,9 +9,16 @@ const passwordInput = document.querySelector("#passwordInput");
 const roleSelect = document.querySelector("#roleSelect");
 const customRoleField = document.querySelector("#customRoleField");
 const customRoleInput = document.querySelector("#customRoleInput");
+const authTitle = document.querySelector("#authTitle");
+const authDescription = document.querySelector("#authDescription");
+const passwordLabel = document.querySelector("#passwordLabel");
+const authSubmit = document.querySelector("#authSubmit");
+const authSwitchPrompt = document.querySelector("#authSwitchPrompt");
+const switchAuthMode = document.querySelector("#switchAuthMode");
 const toast = document.querySelector("#toast");
-let telemetryTimer;
-let telemetryPaused = false;
+let authMode = "register";
+
+document.querySelector("#gitlabLink").href = GITLAB_URL;
 
 function showToast(message) {
   toast.textContent = message;
@@ -20,39 +27,100 @@ function showToast(message) {
   showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2400);
 }
 
-function enterDashboard(name, role) {
+function readAccounts() {
+  try {
+    const accounts = JSON.parse(localStorage.getItem(ACCOUNT_STORAGE_KEY) || "[]");
+    return Array.isArray(accounts) ? accounts : [];
+  } catch {
+    return [];
+  }
+}
+
+function fallbackHash(value) {
+  let hash = 2166136261;
+  for (const character of value) {
+    hash ^= character.codePointAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `local-${(hash >>> 0).toString(16)}`;
+}
+
+async function hashPassword(password) {
+  if (!globalThis.crypto?.subtle) return fallbackHash(password);
+  const bytes = new TextEncoder().encode(password);
+  const digest = await globalThis.crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function enterDashboard(account) {
+  const { name, role } = account;
   document.querySelector("#memberName").textContent = name;
   document.querySelector("#welcomeName").textContent = name;
   document.querySelector("#memberAvatar").textContent = Array.from(name)[0] || "员";
   document.querySelector("#memberRole").textContent = `${role} · 退出`;
   authView.classList.add("is-hidden");
   dashboardView.classList.remove("is-hidden");
-  startTelemetry();
-  showToast(`登录成功，欢迎 ${name}（${role}）`);
+  showToast(`欢迎回来，${name}`);
 }
 
-authForm.addEventListener("submit", (event) => {
-  event.preventDefault();
+function setAuthMode(mode) {
+  authMode = mode;
+  const isRegister = mode === "register";
+  document.querySelectorAll(".registration-only").forEach((field) => field.classList.toggle("is-hidden", !isRegister));
+  roleSelect.required = isRegister;
+  customRoleInput.required = isRegister && roleSelect.value === "其他";
+  passwordInput.autocomplete = isRegister ? "new-password" : "current-password";
+  authTitle.textContent = isRegister ? "注册项目账户" : "登录项目工作台";
+  authDescription.textContent = isRegister ? "首次使用请注册；注册完成后将直接进入工作台。" : "请输入已注册的姓名和密码。";
+  passwordLabel.textContent = isRegister ? "设置密码" : "登录密码";
+  authSubmit.querySelector("span").textContent = isRegister ? "注册并进入工作台" : "登录工作台";
+  authSwitchPrompt.textContent = isRegister ? "已有账户？" : "还没有账户？";
+  switchAuthMode.textContent = isRegister ? "直接登录" : "立即注册";
+  passwordInput.value = "";
+  customRoleField.classList.toggle("is-hidden", !isRegister || roleSelect.value !== "其他");
+}
 
+authForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
   const name = realNameInput.value.trim();
+  const password = passwordInput.value;
   const selectedRole = roleSelect.value;
   const role = selectedRole === "其他" ? customRoleInput.value.trim() : selectedRole;
 
   realNameInput.value = name;
   customRoleInput.value = customRoleInput.value.trim();
-
   if (!authForm.checkValidity()) {
     authForm.reportValidity();
     return;
   }
 
-  if (!name || !role) {
-    showToast("请填写真实姓名并选择项目职责");
+  const accounts = readAccounts();
+  const passwordHash = await hashPassword(password);
+  if (authMode === "register") {
+    if (!name || !role) {
+      showToast("请填写真实姓名并选择项目职责");
+      return;
+    }
+    if (accounts.some((account) => account.name === name)) {
+      showToast("该姓名已注册，请直接登录");
+      setAuthMode("login");
+      return;
+    }
+    const account = { name, role, passwordHash };
+    localStorage.setItem(ACCOUNT_STORAGE_KEY, JSON.stringify([...accounts, account]));
+    enterDashboard(account);
     return;
   }
 
-  enterDashboard(name, role);
+  const account = accounts.find((item) => item.name === name && item.passwordHash === passwordHash);
+  if (!account) {
+    showToast("姓名或密码不正确；首次使用请先注册");
+    return;
+  }
+  enterDashboard(account);
 });
+
+switchAuthMode.addEventListener("click", () => setAuthMode(authMode === "register" ? "login" : "register"));
 
 document.querySelector("#togglePassword").addEventListener("click", (event) => {
   const visible = passwordInput.type === "text";
@@ -61,7 +129,7 @@ document.querySelector("#togglePassword").addEventListener("click", (event) => {
 });
 
 roleSelect.addEventListener("change", () => {
-  const usingCustomRole = roleSelect.value === "其他";
+  const usingCustomRole = authMode === "register" && roleSelect.value === "其他";
   customRoleField.classList.toggle("is-hidden", !usingCustomRole);
   customRoleInput.required = usingCustomRole;
   if (usingCustomRole) customRoleInput.focus();
@@ -70,14 +138,12 @@ roleSelect.addEventListener("change", () => {
 const pageNames = {
   overview: "项目总览",
   progress: "项目进展",
-  tracking: "上位机追踪",
-  gitlab: "GitLab 开发",
   members: "成员管理",
 };
 
 function switchPage(page) {
   document.querySelectorAll("[data-page-content]").forEach((item) => item.classList.toggle("active", item.dataset.pageContent === page));
-  document.querySelectorAll(".nav-item").forEach((item) => item.classList.toggle("active", item.dataset.page === page));
+  document.querySelectorAll(".nav-item[data-page]").forEach((item) => item.classList.toggle("active", item.dataset.page === page));
   document.querySelector("#breadcrumbText").textContent = pageNames[page] || "项目总览";
   document.querySelector(".sidebar").classList.remove("open");
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -92,52 +158,12 @@ document.querySelector("#menuButton").addEventListener("click", () => document.q
 document.querySelector("#logoutButton").addEventListener("click", () => {
   dashboardView.classList.add("is-hidden");
   authView.classList.remove("is-hidden");
-  window.clearInterval(telemetryTimer);
   passwordInput.value = "";
   passwordInput.type = "password";
   document.querySelector("#togglePassword").textContent = "查看";
+  setAuthMode("login");
   showToast("已退出工作台");
   realNameInput.focus();
-});
-
-document.querySelector("#openGitlab").addEventListener("click", () => window.open(GITLAB_PROJECT_URL, "_blank", "noopener,noreferrer"));
-document.querySelectorAll(".repo-list button").forEach((button) => button.addEventListener("click", () => window.open(GITLAB_PROJECT_URL, "_blank", "noopener,noreferrer")));
-
-const jointBars = document.querySelector("#jointBars");
-const baseJointAngles = [28, 46, 67, 34, 75, 52, 61, 41, 70, 56, 32, 48];
-baseJointAngles.forEach((angle, index) => {
-  const element = document.createElement("div");
-  element.className = "joint-bar";
-  element.innerHTML = `<i style="height:${angle}%"></i><b>${angle - 45}°</b><span>J${String(index + 1).padStart(2, "0")}</span>`;
-  jointBars.appendChild(element);
-});
-
-function updateTelemetry() {
-  if (telemetryPaused) return;
-  const speed = (0.38 + Math.random() * 0.09).toFixed(2);
-  const latency = Math.floor(21 + Math.random() * 8);
-  const temperature = (45.6 + Math.random() * 1.6).toFixed(1);
-  document.querySelector("#speedValue").textContent = `${speed} m/s`;
-  document.querySelector("#detailSpeed").textContent = `${speed} m/s`;
-  document.querySelector("#latencyValue").textContent = `${latency} ms`;
-  document.querySelector("#detailLatency").textContent = `${latency} ms`;
-  document.querySelector("#temperatureValue").textContent = `${temperature} °C`;
-  document.querySelectorAll(".joint-bar").forEach((bar, index) => {
-    const value = Math.max(10, Math.min(90, baseJointAngles[index] + Math.round((Math.random() - .5) * 12)));
-    bar.querySelector("i").style.height = `${value}%`;
-    bar.querySelector("b").textContent = `${value - 45}°`;
-  });
-}
-
-function startTelemetry() {
-  window.clearInterval(telemetryTimer);
-  telemetryTimer = window.setInterval(updateTelemetry, 1400);
-}
-
-document.querySelector("#pauseTelemetry").addEventListener("click", (event) => {
-  telemetryPaused = !telemetryPaused;
-  event.currentTarget.textContent = telemetryPaused ? "继续数据流" : "暂停数据流";
-  showToast(telemetryPaused ? "实时数据已暂停" : "实时数据已恢复");
 });
 
 const now = new Date();

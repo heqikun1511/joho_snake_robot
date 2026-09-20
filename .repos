@@ -1,0 +1,50 @@
+repositories:
+  firmware/stm32f407_snake:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/firmware.git
+    version: main
+
+  simulation:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/simulation.git
+    version: main
+
+  ROS-Packages/snake_monitoring:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/monitioring_bringup.git
+    version: main
+
+  ROS-Packages/snake_description:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/description.git
+    version: main
+
+  ROS-Packages/snake_sim_bringup:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/simulink_bringup.git
+    version: main
+
+  ROS-Packages/snake_perception:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/perception_bringup.git
+    version: main
+
+  ROS-Packages/snake_interfaces:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/interface_bringup.git
+    version: main
+
+  Stacks/control:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/stacks/controller.git
+    version: main
+
+  Stacks/monitoring:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/stacks/montioring.git
+    version: main
+
+  Stacks/snake_robot_system:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/stacks/sysstem.git
+    version: main
