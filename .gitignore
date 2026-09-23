@@ -51,6 +51,7 @@ dist/
 *.swp
 *.swo
 *.bak
+*.blend1
 
 # Logs and runtime files
 *.log
