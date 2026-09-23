@@ -53,6 +53,10 @@ dist/
 *.bak
 *.blend1
 
+# Multi-repository workspace populated by `vcs import < workspace.repos`.
+# The integration repository tracks the manifest, not child repository files.
+/workspace/*/
+
 # Logs and runtime files
 *.log
 *.pid
