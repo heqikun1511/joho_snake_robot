@@ -1,0 +1,18 @@
+{
+  "folders": [
+    { "path": ".", "name": "joho integration" },
+    { "path": "workspace/firmware/stm32f407_snake", "name": "firmware" },
+    { "path": "workspace/simulation", "name": "simulation" },
+    { "path": "workspace/ros_packages/snake_description", "name": "snake_description" },
+    { "path": "workspace/ros_packages/snake_interfaces", "name": "snake_interfaces" },
+    { "path": "workspace/ros_packages/snake_monitoring", "name": "snake_monitoring" },
+    { "path": "workspace/ros_packages/snake_perception", "name": "snake_perception" },
+    { "path": "workspace/ros_packages/snake_sim_bringup", "name": "snake_sim_bringup" },
+    { "path": "workspace/stacks/control", "name": "control stack" },
+    { "path": "workspace/stacks/monitoring", "name": "monitoring stack" },
+    { "path": "workspace/stacks/snake_robot_system", "name": "system stack" }
+  ],
+  "settings": {
+    "git.autoRepositoryDetection": "all"
+  }
+}
