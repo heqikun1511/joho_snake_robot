@@ -8,5 +8,6 @@
         "/home/amoy/ros2_ws/ros2_level3/install/actions_py/lib/python3.12/site-packages",
         "/home/amoy/ros2_ws/ros2_level3/install/robot_interface/lib/python3.12/site-packages",
         "/opt/ros/jazzy/lib/python3.12/site-packages"
-    ]
+    ],
+    "git.autoRepositoryDetection": "all"
 }

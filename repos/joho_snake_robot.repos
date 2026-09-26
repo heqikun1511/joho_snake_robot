@@ -1,0 +1,32 @@
+# Workspace manifest for vcstool.  Paths are relative to the repository root.
+# Keep repository source out of the integration repository; each entry retains
+# its own Git history, branch, and review workflow.
+repositories:
+  src/snake_description:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/description.git
+    version: feature/arti
+  src/snake_interfaces:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/interface_bringup.git
+    version: feature/arti
+  src/snake_monitoring:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/monitioring_bringup.git
+    version: feature/arti
+  src/snake_perception:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/perception_bringup.git
+    version: feature/arti
+  src/snake_sim_bringup:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/simulink_bringup.git
+    version: feature/arti
+  firmware/stm32f407_snake:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/firmware.git
+    version: feature/arti
+  simulation:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/simulation.git
+    version: feat/simulation-assets

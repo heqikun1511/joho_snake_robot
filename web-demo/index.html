@@ -3,194 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="灵蛇智采——蛇形机器人水果采摘项目工作台" />
-    <title>灵蛇智采 · 项目工作台</title>
+    <meta name="description" content="厦门理工学院灵蛇智采项目组 GitLab 开发入口" />
+    <title>厦门理工学院灵蛇智采项目组</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main id="authView" class="auth-view">
-      <section class="brand-panel">
-        <div class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 64 64" role="img">
-            <path d="M14 17c9-9 28-8 31 2 4 14-25 9-25 21 0 7 10 9 18 4" />
-            <circle cx="47" cy="18" r="2.4" />
-            <path d="M38 44l7-4M38 44l6 5" />
-          </svg>
-        </div>
-        <div class="brand-copy">
-          <span class="eyebrow">ORCHARD ROBOTICS · 2026</span>
-          <h1>让机器人抵达<br />每一颗成熟的果实</h1>
-          <p>蛇形结构穿行复杂枝叶，融合视觉识别与柔性采摘，为智慧果园提供可靠的自动化方案。</p>
-        </div>
-        <div class="orchard-art" aria-hidden="true">
-          <div class="sun"></div>
-          <div class="tree tree-one"><i></i><i></i><i></i></div>
-          <div class="tree tree-two"><i></i><i></i></div>
-          <svg class="snake-art" viewBox="0 0 500 210">
-            <path class="snake-shadow" d="M20 165C102 82 142 205 224 120s143 63 251-42" />
-            <path class="snake-body" d="M20 156C102 73 142 196 224 111s143 63 251-42" />
-            <g class="joints">
-              <circle cx="63" cy="128" r="10" /><circle cx="117" cy="129" r="10" />
-              <circle cx="174" cy="148" r="10" /><circle cx="226" cy="109" r="10" />
-              <circle cx="277" cy="89" r="10" /><circle cx="333" cy="112" r="10" />
-              <circle cx="393" cy="111" r="10" /><circle cx="445" cy="82" r="10" />
-            </g>
-          </svg>
-        </div>
-        <div class="brand-stats">
-          <div><strong>12</strong><span>自由度关节</span></div>
-          <div><strong>92%</strong><span>目标识别率</span></div>
-          <div><strong>24h</strong><span>状态监测</span></div>
-        </div>
-      </section>
-
-      <section class="login-panel">
-        <div class="login-card">
-          <div class="mobile-logo"><span>灵</span> 灵蛇智采</div>
-          <div class="login-heading">
-            <span class="login-kicker">MEMBER PORTAL</span>
-            <h2 id="authTitle">注册项目账户</h2>
-            <p id="authDescription">首次使用请注册；注册完成后将直接进入工作台。</p>
-          </div>
-
-          <form id="authForm">
-            <label>
-              <span>真实姓名</span>
-              <div class="input-wrap">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0116 0" /></svg>
-                <input id="realNameInput" type="text" placeholder="请输入真实姓名" autocomplete="name" minlength="2" maxlength="30" required />
-              </div>
-            </label>
-            <label>
-              <span id="passwordLabel">设置密码</span>
-              <div class="input-wrap">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" /><path d="M8 10V7a4 4 0 018 0v3" /></svg>
-                <input id="passwordInput" type="password" placeholder="至少 6 位字符" autocomplete="new-password" minlength="6" maxlength="64" required />
-                <button id="togglePassword" class="icon-button" type="button" aria-label="显示密码">查看</button>
-              </div>
-            </label>
-            <label class="registration-only">
-              <span>项目职责</span>
-              <div class="input-wrap select-wrap">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="3" /><circle cx="17" cy="7" r="2" /><path d="M2.5 20a5.5 5.5 0 0111 0M13 19a4 4 0 018 0" /></svg>
-                <select id="roleSelect" required>
-                  <option value="" selected disabled>请选择负责内容</option>
-                  <option value="控制与路径规划">控制与路径规划</option>
-                  <option value="SLAM">SLAM</option>
-                  <option value="系统架构设计">系统架构设计</option>
-                  <option value="指导老师">指导老师</option>
-                  <option value="负责人">负责人</option>
-                  <option value="其他">其他</option>
-                </select>
-              </div>
-            </label>
-            <label id="customRoleField" class="registration-only is-hidden">
-              <span>其他职责</span>
-              <div class="input-wrap">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V16l11-11 3.5 3.5-11 11zM13.5 6.5l3.5 3.5" /></svg>
-                <input id="customRoleInput" type="text" placeholder="请输入你的负责内容" maxlength="30" />
-              </div>
-            </label>
-            <button id="authSubmit" class="primary-button" type="submit"><span>注册并进入工作台</span><span>→</span></button>
-          </form>
-
-          <p class="switch-auth"><span id="authSwitchPrompt">已有账户？</span><button id="switchAuthMode" type="button">直接登录</button></p>
-          <p class="prototype-note">账户信息仅保存在当前浏览器；正式多人协作请接入后端认证服务。</p>
-        </div>
-      </section>
-    </main>
-
-    <main id="dashboardView" class="dashboard-view is-hidden">
-      <aside class="sidebar">
-        <a class="side-brand" href="#overview" data-page="overview">
-          <span class="side-logo">灵</span>
-          <span><strong>灵蛇智采</strong><small>ORCHARD ROBOTICS</small></span>
-        </a>
-        <nav class="side-nav" aria-label="主要导航">
-          <span class="nav-label">工作台</span>
-          <button class="nav-item active" data-page="overview"><span class="nav-icon">⌂</span>项目总览</button>
-          <button class="nav-item" data-page="progress"><span class="nav-icon">◫</span>项目进展<span class="nav-badge">6</span></button>
-          <a id="gitlabLink" class="nav-item" href="http://gitlab.xmutros2snake.com"><span class="nav-icon">◇</span>GitLab 开发 <span class="external-mark">↗</span></a>
-          <span class="nav-label nav-label-second">团队</span>
-          <button class="nav-item" data-page="members"><span class="nav-icon">♙</span>成员管理</button>
-        </nav>
-        <div class="side-status">
-          <div class="status-orbit"><span></span></div>
-          <div><strong>项目工作台</strong><small>设备监控功能未在网页开放</small></div>
-        </div>
-        <button id="logoutButton" class="profile" type="button">
-          <span id="memberAvatar" class="avatar">林</span>
-          <span><strong id="memberName">林工</strong><small id="memberRole">项目成员 · 退出</small></span>
-          <span>···</span>
-        </button>
-      </aside>
-
-      <section class="main-area">
-        <header class="topbar">
-          <button id="menuButton" class="menu-button" type="button" aria-label="打开导航">☰</button>
-          <div>
-            <p class="breadcrumb">灵蛇智采 / <span id="breadcrumbText">项目总览</span></p>
-          </div>
-          <div class="top-actions">
-            <span class="today" id="todayText"></span>
-            <button class="notification-button" type="button" aria-label="消息">♢<i></i></button>
-            <button class="new-task-button" type="button">＋ 新建任务</button>
-          </div>
-        </header>
-
-        <div class="content">
-          <section class="page active" data-page-content="overview">
-            <div class="welcome-row">
-              <div><span class="section-kicker">PROJECT COCKPIT</span><h1>早上好，<span id="welcomeName">林工</span></h1><p>果园测试进入第 3 阶段，目前各项系统运行平稳。</p></div>
-              <div class="weather"><span>☀</span><div><strong>26°C</strong><small>试验果园 · 晴</small></div></div>
-            </div>
-            <div class="metric-grid">
-              <article class="metric-card green"><div class="metric-icon">◉</div><div><span>项目总进度</span><strong>68<small>%</small></strong><em>本周 +6%</em></div></article>
-              <article class="metric-card violet"><div class="metric-icon">⑂</div><div><span>待处理任务</span><strong>6<small>项</small></strong><em>2 项优先</em></div></article>
-            </div>
-
-            <div class="overview-grid overview-single">
-              <article class="panel project-panel">
-                <div class="panel-title"><div><span class="section-kicker">MILESTONES</span><h2>项目进展</h2></div><button class="link-button" data-go="progress">查看全部 →</button></div>
-                <div class="big-progress"><div><strong>68%</strong><span>总体完成度</span></div><div class="progress-track"><i style="width:68%"></i></div><small>距离下一里程碑还有 12 天</small></div>
-                <div class="milestones">
-                  <div class="milestone done"><span>✓</span><div><strong>机械结构设计</strong><small>已完成 · 08月12日</small></div><em>100%</em></div>
-                  <div class="milestone done"><span>✓</span><div><strong>运动控制系统</strong><small>已完成 · 08月28日</small></div><em>100%</em></div>
-                  <div class="milestone current"><span>3</span><div><strong>视觉识别与定位</strong><small>进行中 · 3 个任务待完成</small></div><em>72%</em></div>
-                  <div class="milestone"><span>4</span><div><strong>果园联合测试</strong><small>计划开始 · 09月18日</small></div><em>35%</em></div>
+    <main class="site-shell">
+      <section class="hero" aria-labelledby="site-title">
+        <p class="eyebrow">XIAMEN UNIVERSITY OF TECHNOLOGY</p>
+        <h1 id="site-title">厦门理工学院<br />灵蛇智采项目组</h1>
+        <p class="summary">面向智能采摘场景，开展蛇形机器人结构、控制与感知技术研发。</p>
+        <section class="project-sections" aria-label="项目板块">
+          <details class="module-card organization-module">
+            <summary>
+              <span class="module-icon" aria-hidden="true">◇</span>
+              <span><strong>组织架构</strong><small>项目团队与职责分工</small></span>
+              <b aria-hidden="true">＋</b>
+            </summary>
+            <div class="team-structure" aria-labelledby="team-title">
+              <p class="section-kicker">PROJECT TEAM</p>
+              <h2 id="team-title">项目组织架构</h2>
+              <div class="team-tree">
+                <article class="team-card advisor-card"><span class="role-label">指导老师</span><strong>杨贵志</strong></article>
+                <div class="tree-line" aria-hidden="true"></div>
+                <article class="team-card lead-card"><span class="role-label">项目负责人</span><strong>贺琦坤</strong></article>
+                <div class="tree-line members-line" aria-hidden="true"></div>
+                <div class="member-grid" aria-label="项目组员">
+                  <article class="member-card"><span>组员</span><strong>龙静英</strong></article>
+                  <article class="member-card"><span>组员</span><strong>李诗楷</strong></article>
+                  <article class="member-card"><span>组员</span><strong>孔德柯</strong></article>
+                  <article class="member-card"><span>组员</span><strong>纪铭涛</strong></article>
                 </div>
-              </article>
-
-            </div>
-
-            <article class="panel activity-panel">
-              <div class="panel-title"><div><span class="section-kicker">ACTIVITY</span><h2>最近动态</h2></div><button class="dots-button">···</button></div>
-              <div class="activity-list">
-                <div><span class="activity-icon git">◇</span><p><strong>陈工</strong> 向 <code>feature/vision-v2</code> 推送了 3 个提交<small>18 分钟前</small></p><em>GitLab</em></div>
-                <div><span class="activity-icon task">!</span><p><strong>李工</strong> 完成任务「优化关节防碰撞策略」<small>昨天 17:48</small></p><em>项目进展</em></div>
               </div>
-            </article>
-          </section>
-
-          <section class="page" data-page-content="progress">
-            <div class="page-heading"><div><span class="section-kicker">PROJECT PROGRESS</span><h1>项目进展</h1><p>跟踪研发阶段、任务负责人和关键交付节点。</p></div><button class="new-task-button">＋ 添加里程碑</button></div>
-            <div class="stage-strip"><div class="complete"><span>01</span><strong>方案设计</strong><small>已完成</small></div><div class="complete"><span>02</span><strong>样机开发</strong><small>已完成</small></div><div class="active"><span>03</span><strong>感知集成</strong><small>进行中</small></div><div><span>04</span><strong>果园测试</strong><small>待开始</small></div><div><span>05</span><strong>验收交付</strong><small>待开始</small></div></div>
-            <div class="task-columns">
-              <article class="task-column"><div class="column-title"><span>待处理</span><b>3</b></div><div class="task-card priority"><em>高优先级</em><h3>补充遮挡场景训练数据</h3><p>收集不同光照下的苹果枝叶遮挡样本。</p><footer><span class="avatar small">王</span><time>09月12日</time></footer></div><div class="task-card"><em>机械</em><h3>末端夹爪耐久性测试</h3><p>完成 2,000 次连续开合测试。</p><footer><span class="avatar small">刘</span><time>09月14日</time></footer></div></article>
-              <article class="task-column"><div class="column-title"><span>进行中</span><b>2</b></div><div class="task-card active-task"><em>视觉算法</em><h3>成熟度识别模型 V2</h3><p>验证集准确率目标 ≥ 94%。</p><div class="card-progress"><i style="width:72%"></i></div><footer><span class="avatar small">陈</span><time>72%</time></footer></div><div class="task-card"><em>控制</em><h3>路径规划避障优化</h3><p>降低密集枝叶环境中的规划耗时。</p><footer><span class="avatar small">林</span><time>09月15日</time></footer></div></article>
-              <article class="task-column"><div class="column-title"><span>已完成</span><b>2</b></div><div class="task-card done-task"><em>✓ 已完成</em><h3>CAN 总线协议联调</h3><p>主控与十二关节通信稳定。</p><footer><span class="avatar small">林</span><time>09月08日</time></footer></div><div class="task-card done-task"><em>✓ 已完成</em><h3>采摘策略评审</h3><p>完成果园试验流程与安全边界评审。</p><footer><span class="avatar small">赵</span><time>09月06日</time></footer></div></article>
             </div>
-          </section>
-
-          <section class="page" data-page-content="members">
-            <div class="page-heading"><div><span class="section-kicker">TEAM MEMBERS</span><h1>项目成员</h1><p>界面原型仅展示成员列表，正式版需要连接后端权限系统。</p></div><button class="new-task-button">＋ 邀请成员</button></div>
-            <article class="panel member-table"><div class="member-row table-head"><span>成员</span><span>职责</span><span>最近活动</span><span>状态</span></div><div class="member-row"><span><i class="avatar">林</i><b>林工<small>lin@team.com</small></b></span><span>系统与控制</span><span>5 分钟前</span><em>在线</em></div><div class="member-row"><span><i class="avatar coral">陈</i><b>陈工<small>chen@team.com</small></b></span><span>视觉算法</span><span>18 分钟前</span><em>在线</em></div><div class="member-row"><span><i class="avatar blue-avatar">王</i><b>王工<small>wang@team.com</small></b></span><span>数据与测试</span><span>2 小时前</span><em class="away">离开</em></div><div class="member-row"><span><i class="avatar gold">刘</i><b>刘工<small>liu@team.com</small></b></span><span>机械结构</span><span>昨天</span><em class="offline">离线</em></div></article>
-          </section>
-        </div>
+          </details>
+          <article class="module-card"><span class="module-icon" aria-hidden="true">▤</span><strong>教学文档</strong><small>课程资料与学习记录</small></article>
+          <article class="module-card"><span class="module-icon" aria-hidden="true">✦</span><strong>成果展示</strong><small>项目阶段成果与展示</small></article>
+          <article class="module-card"><span class="module-icon" aria-hidden="true">⌁</span><strong>运动检测</strong><small>机器人姿态与运动状态检测</small></article>
+          <article class="module-card"><span class="module-icon" aria-hidden="true">▱</span><strong>相关资料文档</strong><small>技术文档与参考资料</small></article>
+          
+        </section> 
+        <a class="gitlab-entry" href="http://203.195.206.69/">
+          <span class="gitlab-icon" aria-hidden="true">◆</span>
+          <span>GitLab 登录并开始开发</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <p class="hint">点击后将前往项目 GitLab 平台。</p>
       </section>
     </main>
-
-    <div id="toast" class="toast" role="status"></div>
-    <script src="app.js"></script>
   </body>
 </html>
