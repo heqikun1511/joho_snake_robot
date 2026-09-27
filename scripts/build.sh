@@ -18,5 +18,7 @@ fi
 
 cd -- "${PROJECT_ROOT}"
 # shellcheck disable=SC1090
+set +u
 source "${ROS_SETUP}"
+set -u
 colcon build --base-paths src --symlink-install "$@"
