@@ -6,16 +6,16 @@
         "limitSymbolsToIncludedHeaders": false
       },
       "includePath": [
-        "/home/amoy/ros2_ws/ros2_level3/install/robot_interface/include/**",
+        "${workspaceFolder}/src/**",
         "/opt/ros/jazzy/include/**",
-        "/home/amoy/F407_active/ros2_snake/snake_driver/include/**",
-        "/home/amoy/F407_active/ros2_snake/snake_ros/include/**",
-        "/home/amoy/F407_active/ros2_snake/snake_teleop/include/**",
+        "${workspaceFolder}/install/**",
         "/usr/include/**"
       ],
+      "defines": [],
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
       "name": "ros2",
       "intelliSenseMode": "gcc-x64",
-      "compilerPath": "/usr/bin/gcc",
+      "compilerPath": "/usr/bin/g++",
       "cStandard": "gnu11",
       "cppStandard": "c++17"
     }

@@ -4,13 +4,34 @@
     { "path": "firmware/stm32f407_snake", "name": "firmware" },
     { "path": "simulation", "name": "simulation" },
     { "path": "src/snake_description", "name": "snake_description" },
+    { "path": "src/snake_hardware", "name": "snake_hardware" },
     { "path": "src/snake_interfaces", "name": "snake_interfaces" },
+    { "path": "src/snake_mpc_controller", "name": "snake_mpc_controller" },
     { "path": "src/snake_monitoring", "name": "snake_monitoring" },
     { "path": "src/snake_perception", "name": "snake_perception" },
     { "path": "src/snake_sim_bringup", "name": "snake_sim_bringup" }
   ],
   "settings": {
     "git.autoRepositoryDetection": "all",
+    "C_Cpp.default.compilerPath": "/usr/bin/g++",
+    "C_Cpp.default.cStandard": "gnu11",
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+    "C_Cpp.default.compileCommands": "${workspaceFolder:joho integration}/build/compile_commands.json",
+    "C_Cpp.default.includePath": [
+      "${workspaceFolder}/include",
+      "${workspaceFolder}/src",
+      "/opt/ros/jazzy/include/**",
+      "/usr/include/**"
+    ],
+    "C_Cpp.errorSquiggles": "enabled",
+    "cmake.configureOnOpen": false,
+    "files.watcherExclude": {
+      "**/build/**": true,
+      "**/install/**": true,
+      "**/log/**": true,
+      "**/.git/objects/**": true
+    },
     "python.autoComplete.extraPaths": [
       "/opt/ros/jazzy/lib/python3.12/site-packages"
     ],

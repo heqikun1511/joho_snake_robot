@@ -1,13 +1,12 @@
 {
     "python.autoComplete.extraPaths": [
-        "/home/amoy/ros2_ws/ros2_level3/install/actions_py/lib/python3.12/site-packages",
-        "/home/amoy/ros2_ws/ros2_level3/install/robot_interface/lib/python3.12/site-packages",
+        "${workspaceFolder}/install",
         "/opt/ros/jazzy/lib/python3.12/site-packages"
     ],
     "python.analysis.extraPaths": [
-        "/home/amoy/ros2_ws/ros2_level3/install/actions_py/lib/python3.12/site-packages",
-        "/home/amoy/ros2_ws/ros2_level3/install/robot_interface/lib/python3.12/site-packages",
+        "${workspaceFolder}/install",
         "/opt/ros/jazzy/lib/python3.12/site-packages"
     ],
-    "git.autoRepositoryDetection": "all"
+    "git.autoRepositoryDetection": "all",
+    "C_Cpp.errorSquiggles": "enabled"
 }
