@@ -22,24 +22,18 @@ repositories:
     type: git
     url: git@gitlab.xmutros2snake.com:xmut/ros_packages/simulink_bringup.git
     version: feature/arti
-  src/snake_mpc_controller:
-    type: git
-    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/snake_hardware.git
-    version: feature/arti
+  
   src/snake_hardware:
     type: git
     url: git@gitlab.xmutros2snake.com:xmut/ros_packages/snake_hardware.git
     version: feature/arti
-  src/snake_hardware:
-    type: git
-    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/snake_mpc_controller.git
-    version: feature/arti
+
   firmware/stm32f407_snake:
     type: git
     url: git@gitlab.xmutros2snake.com:xmut/firmware.git
     version: feature/arti
-    
-  simulation:
+  src/snake_control_algorithms:
     type: git
-    url: git@gitlab.xmutros2snake.com:xmut/simulation.git
-    version: feat/simulation-assets
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/snake_control_algorithms.git
+    version: feature/snake-control-algorithms
+

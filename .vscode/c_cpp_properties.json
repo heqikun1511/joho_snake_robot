@@ -1,24 +1,29 @@
 {
+  "version": 4,
   "configurations": [
     {
-      "browse": {
-        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db",
-        "limitSymbolsToIncludedHeaders": false
-      },
-      "includePath": [
-        "${workspaceFolder}/src/**",
-        "/opt/ros/jazzy/include/**",
-        "${workspaceFolder}/install/**",
-        "/usr/include/**"
-      ],
-      "defines": [],
-      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
-      "name": "ros2",
-      "intelliSenseMode": "gcc-x64",
+      "name": "ROS 2 Jazzy (Host)",
       "compilerPath": "/usr/bin/g++",
+      "intelliSenseMode": "linux-gcc-x64",
       "cStandard": "gnu11",
-      "cppStandard": "c++17"
+      "cppStandard": "c++17",
+      "compileCommands": "${workspaceFolder:joho integration}/build/compile_commands.json",
+      "includePath": [
+        "${workspaceFolder:joho integration}/src/**",
+        "${workspaceFolder:joho integration}/install/**",
+        "/opt/ros/jazzy/include",
+        "/usr/include/pcl-1.14",
+        "/usr/include/eigen3"
+      ],
+      "browse": {
+        "databaseFilename": "${workspaceFolder:joho integration}/.vscode/browse.vc.db",
+        "path": [
+          "${workspaceFolder:joho integration}/src",
+          "${workspaceFolder:joho integration}/install",
+          "/opt/ros/jazzy/include"
+        ],
+        "limitSymbolsToIncludedHeaders": false
+      }
     }
-  ],
-  "version": 4
+  ]
 }
