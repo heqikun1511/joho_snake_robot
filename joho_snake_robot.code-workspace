@@ -13,6 +13,14 @@
       "name": "simulation"
     },
     {
+      "path": "src/snake_control_algorithms",
+      "name": "snake_control_algorithms"
+    },
+    {
+      "path": "src/snake_control_node",
+      "name": "snake_control_node"
+    },
+    {
       "path": "src/snake_description",
       "name": "snake_description"
     },

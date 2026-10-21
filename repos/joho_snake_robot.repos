@@ -35,5 +35,8 @@ repositories:
   src/snake_control_algorithms:
     type: git
     url: git@gitlab.xmutros2snake.com:xmut/ros_packages/snake_control_algorithms.git
-    version: feature/snake-control-algorithms
-
+    version:  feature/snake-control-algorithms
+  src/snake_control_node:
+    type: git
+    url: git@gitlab.xmutros2snake.com:xmut/ros_packages/snake_control_node.git
+    version: feat_simulation
